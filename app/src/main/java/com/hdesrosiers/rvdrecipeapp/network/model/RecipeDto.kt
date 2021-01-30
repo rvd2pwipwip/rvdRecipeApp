@@ -2,7 +2,9 @@ package com.hdesrosiers.rvdrecipeapp.network.model
 
 import com.google.gson.annotations.SerializedName
 
-class RecipeNetworkEntity(
+// model a recipe coming from network (https://food2fork.ca)
+
+data class RecipeDto(
     @SerializedName("pk")
     var pk: Int? = null,
 

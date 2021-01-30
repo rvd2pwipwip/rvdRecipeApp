@@ -1,6 +1,6 @@
 package com.hdesrosiers.rvdrecipeapp.network
 
-import com.hdesrosiers.rvdrecipeapp.network.model.RecipeNetworkEntity
+import com.hdesrosiers.rvdrecipeapp.network.model.RecipeDto
 import com.hdesrosiers.rvdrecipeapp.network.responses.RecipeSearchResponse
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -18,5 +18,5 @@ interface RecipeService{
     suspend fun get(
         @Header("Authorization") token: String,
         @Query("id") id: Int
-    ): RecipeNetworkEntity
+    ): RecipeDto
 }

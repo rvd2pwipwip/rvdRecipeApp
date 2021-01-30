@@ -6,8 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.GsonBuilder
 import com.hdesrosiers.rvdrecipeapp.domain.model.Recipe
 import com.hdesrosiers.rvdrecipeapp.network.RecipeService
-import com.hdesrosiers.rvdrecipeapp.network.model.RecipeNetworkEntity
-import com.hdesrosiers.rvdrecipeapp.network.model.RecipeNetworkMapper
+import com.hdesrosiers.rvdrecipeapp.network.model.RecipeDto
+import com.hdesrosiers.rvdrecipeapp.network.model.RecipeDtoMapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
             .build()
             .create(RecipeService::class.java)
 
-        // example request on background thread with IO (instead of Main)
+        // example request using coroutine on background thread (IO instead of Main)
         CoroutineScope(IO).launch {
             val recipe = service.get(
                 token = "Token 9c8b06d329136da358c2d00e76946b0111ce2c48",
@@ -36,11 +36,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         // example mapping of RecipeNetworkEntity <-> Recipe
-        val mapper = RecipeNetworkMapper()
+        val mapper = RecipeDtoMapper()
         val recipe = Recipe()
 
-        val networkEntity: RecipeNetworkEntity = mapper.mapToEntity(recipe)
-        val r: Recipe = mapper.mapFromEntity(networkEntity)
+        val dto: RecipeDto = mapper.mapFromDomainModel(recipe)
+        val r: Recipe = mapper.mapToDomainModel(dto)
 
 //        setContent {
 //            ScrollableColumn(
