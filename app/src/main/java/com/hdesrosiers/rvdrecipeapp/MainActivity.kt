@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.GsonBuilder
+import com.hdesrosiers.rvdrecipeapp.domain.model.Recipe
 import com.hdesrosiers.rvdrecipeapp.network.RecipeService
+import com.hdesrosiers.rvdrecipeapp.network.model.RecipeNetworkEntity
+import com.hdesrosiers.rvdrecipeapp.network.model.RecipeNetworkMapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -31,6 +34,13 @@ class MainActivity : AppCompatActivity() {
             )
             Log.d("MainActivity", "onCreate: ${recipe.title}")
         }
+
+        // example mapping of RecipeNetworkEntity <-> Recipe
+        val mapper = RecipeNetworkMapper()
+        val recipe = Recipe()
+
+        val networkEntity: RecipeNetworkEntity = mapper.mapToEntity(recipe)
+        val r: Recipe = mapper.mapFromEntity(networkEntity)
 
 //        setContent {
 //            ScrollableColumn(
