@@ -2,7 +2,7 @@ package com.hdesrosiers.rvdrecipeapp.network.model
 
 import com.google.gson.annotations.SerializedName
 
-// model a recipe coming from network (https://food2fork.ca)
+// model of a recipe coming from network (https://food2fork.ca)
 
 data class RecipeDto(
     @SerializedName("pk")
