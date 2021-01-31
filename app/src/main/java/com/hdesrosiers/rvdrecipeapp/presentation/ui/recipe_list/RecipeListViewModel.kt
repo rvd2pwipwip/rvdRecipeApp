@@ -1,28 +1,40 @@
 package com.hdesrosiers.rvdrecipeapp.presentation.ui.recipe_list
 
-//import androidx.hilt.lifecycle.ViewModelInject
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.hdesrosiers.rvdrecipeapp.domain.model.Recipe
 import com.hdesrosiers.rvdrecipeapp.repository.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
 class RecipeListViewModel
-    // constructor needed to inject dependencies into ViewModel
-//    @ViewModelInject //deprecated; use @HiltViewModel and @Inject instead
-    @Inject
-    constructor(
-        private val randomString: String,
-        private val repository: RecipeRepository,
-        @Named("auth_token") private val token: String
-    ): ViewModel() {
-        init {
-            println("ViewModel: $randomString")
-            println("ViewModel: $repository")
-            println("ViewModel: $token")
+// constructor needed to inject dependencies into ViewModel
+@Inject
+constructor(
+    // [RetrofitService] <- [Repository] <- [ViewModel]
+    // repository passed as view model constructor arg
+    private val repository: RecipeRepository,
+    @Named("auth_token") private val token: String
+) : ViewModel() {
+    // observe data from repository
+    val recipes: MutableState<List<Recipe>> = mutableStateOf(listOf())
+
+    //get data from repository
+    init {
+        viewModelScope.launch {
+            val result = repository.search(
+                token = token,
+                page = 1,
+                query = "chicken"
+            )
+            recipes.value = result
         }
-    fun getRepo() = repository
-    fun getRandomString() = randomString
-    fun getToken() = token
+    }
 }

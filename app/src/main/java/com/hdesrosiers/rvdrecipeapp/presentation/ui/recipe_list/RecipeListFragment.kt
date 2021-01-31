@@ -1,6 +1,7 @@
 package com.hdesrosiers.rvdrecipeapp.presentation.ui.recipe_list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.hdesrosiers.rvdrecipeapp.R
+import com.hdesrosiers.rvdrecipeapp.util.TAG
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,33 +30,33 @@ class RecipeListFragment : Fragment() {
     // instantiate ViewModel inside fragment
     val viewModel: RecipeListViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        println("RecipeListFragment: ${viewModel.getRepo()}")
-        println("RecipeListFragment: ${viewModel.getRandomString()}")
-        println("RecipeListFragment: ${viewModel.getToken()}")
-    }
-
     override fun onCreateView(
-          inflater: LayoutInflater,
-          container: ViewGroup?,
-          savedInstanceState: Bundle?
-  ): View {
-    return ComposeView(requireContext()).apply {
-        setContent {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = "Recipe List",
-                    style = TextStyle(fontSize = 21.sp)
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-                Button(onClick = {
-                    findNavController().navigate(R.id.viewRecipe) //not the fragment id, the navigation action id
-                }) {
-                    Text(text = "To recipe fragment")
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setContent {
+
+                val recipes = viewModel.recipes.value
+
+                for (recipe in recipes) {
+                    Log.d(TAG, "onCreateView: ${recipe.title}")
+                }
+
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "Recipe List",
+                        style = TextStyle(fontSize = 21.sp)
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Button(onClick = {
+                        findNavController().navigate(R.id.viewRecipe) //not the fragment id, the navigation action id
+                    }) {
+                        Text(text = "To recipe fragment")
+                    }
                 }
             }
         }
     }
-  }
 }

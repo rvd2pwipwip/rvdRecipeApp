@@ -5,6 +5,8 @@ import com.hdesrosiers.rvdrecipeapp.network.RecipeService
 import com.hdesrosiers.rvdrecipeapp.network.model.RecipeDtoMapper
 
 class RecipeRepository_Impl(
+    // [RetrofitService] <- [Repository] <- [ViewModel]
+    // retrofit service passed as repository constructor arg
     private val recipeService: RecipeService,
     private val mapper: RecipeDtoMapper
 ): RecipeRepository {
