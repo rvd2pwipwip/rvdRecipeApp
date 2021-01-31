@@ -1,4 +1,4 @@
-package com.hdesrosiers.rvdrecipeapp
+package com.hdesrosiers.rvdrecipeapp.presentation
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

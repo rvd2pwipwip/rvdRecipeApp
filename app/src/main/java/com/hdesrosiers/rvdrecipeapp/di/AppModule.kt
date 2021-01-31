@@ -1,7 +1,7 @@
 package com.hdesrosiers.rvdrecipeapp.di
 
 import android.content.Context
-import com.hdesrosiers.rvdrecipeapp.BaseApplication
+import com.hdesrosiers.rvdrecipeapp.presentation.BaseApplication
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

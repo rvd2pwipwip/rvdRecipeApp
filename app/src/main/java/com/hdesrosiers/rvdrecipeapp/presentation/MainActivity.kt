@@ -1,19 +1,10 @@
-package com.hdesrosiers.rvdrecipeapp
+package com.hdesrosiers.rvdrecipeapp.presentation
 
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.google.gson.GsonBuilder
-import com.hdesrosiers.rvdrecipeapp.domain.model.Recipe
-import com.hdesrosiers.rvdrecipeapp.network.RecipeService
-import com.hdesrosiers.rvdrecipeapp.network.model.RecipeDto
-import com.hdesrosiers.rvdrecipeapp.network.model.RecipeDtoMapper
+import com.hdesrosiers.rvdrecipeapp.R
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 
@@ -23,18 +14,18 @@ class MainActivity : AppCompatActivity() {
     private val TAG: String = "AppDebug"
 
     // field injection because constructor injection doesn't work on activities
-    @Inject
-    lateinit var app: BaseApplication
-
-    @Inject
-    lateinit var someRandomString: String
+//    @Inject
+//    lateinit var app: BaseApplication
+//
+//    @Inject
+//    lateinit var someRandomString: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Log.d(TAG, "onCreate: $someRandomString")
-        Log.d(TAG, "onCreate: $app")
+//        Log.d(TAG, "onCreate: $someRandomString")
+//        Log.d(TAG, "onCreate: $app")
 
 //        // build a recipe retrofit service object to access network data
 //        val service = Retrofit.Builder()

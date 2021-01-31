@@ -1,11 +1,9 @@
-package com.hdesrosiers.rvdrecipeapp
+package com.hdesrosiers.rvdrecipeapp.presentation.ui.recipe_list
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -18,11 +16,24 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
+// import androidx.fragment.app.activityViewModels //if we want to share the ViewModel between activities
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import com.hdesrosiers.rvdrecipeapp.R
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RecipeListFragment : Fragment() {
 
-  override fun onCreateView(
+    // instantiate ViewModel inside fragment
+    val viewModel: RecipeListViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        println("RecipeListFragment: $viewModel")
+    }
+
+    override fun onCreateView(
           inflater: LayoutInflater,
           container: ViewGroup?,
           savedInstanceState: Bundle?

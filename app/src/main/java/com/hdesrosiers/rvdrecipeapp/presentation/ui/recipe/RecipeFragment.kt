@@ -1,4 +1,4 @@
-package com.hdesrosiers.rvdrecipeapp
+package com.hdesrosiers.rvdrecipeapp.presentation.ui.recipe
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import com.hdesrosiers.rvdrecipeapp.presentation.ui.recipe_list.RecipeListViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RecipeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
