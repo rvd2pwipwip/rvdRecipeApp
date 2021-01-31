@@ -30,7 +30,9 @@ class RecipeListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        println("RecipeListFragment: $viewModel")
+        println("RecipeListFragment: ${viewModel.getRepo()}")
+        println("RecipeListFragment: ${viewModel.getRandomString()}")
+        println("RecipeListFragment: ${viewModel.getToken()}")
     }
 
     override fun onCreateView(
