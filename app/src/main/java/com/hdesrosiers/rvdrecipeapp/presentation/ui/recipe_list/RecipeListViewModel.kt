@@ -28,6 +28,10 @@ constructor(
 
     //get data from repository
     init {
+        newSearch()
+    }
+
+    fun newSearch(){
         viewModelScope.launch {
             val result = repository.search(
                 token = token,
