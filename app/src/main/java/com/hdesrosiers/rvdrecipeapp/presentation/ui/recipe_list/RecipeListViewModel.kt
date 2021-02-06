@@ -26,6 +26,8 @@ constructor(
     // observe data from repository
     val recipes: MutableState<List<Recipe>> = mutableStateOf(listOf())
 
+    val query = mutableStateOf("Chicken")
+
     //get data from repository
     init {
         newSearch()
@@ -40,5 +42,10 @@ constructor(
             )
             recipes.value = result
         }
+    }
+
+    //change the value of query here to pass it to RecipeListFragment
+    fun onQueryChanged(query: String) {
+        this.query.value = query
     }
 }

@@ -12,6 +12,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.savedinstancestate.savedInstanceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.text.TextStyle
@@ -41,14 +45,32 @@ class RecipeListFragment : Fragment() {
             setContent {
 
                 val recipes = viewModel.recipes.value // observable data
-                
-                LazyColumn(content = {
-                    itemsIndexed(
-                        items = recipes
-                    ) { index, recipe ->
-                        RecipeCard(recipe = recipe, onClick = { /*TODO*/ })
-                    }
-                })
+
+                // Mutable data structure that will be passed to the TextField
+                val query = viewModel.query.value // from viewModel to persist configuration change
+                // another way of persisting data with savedInstanceState
+//                val _query = savedInstanceState{ "Beef" }
+
+                Column {
+                    TextField(
+                        value = query,
+//                        value = _query.value,
+                        onValueChange = {
+                            viewModel.onQueryChanged(it)
+//                            _query.value = it
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    LazyColumn(content = {
+                        itemsIndexed(
+                            items = recipes
+                        ) { index, recipe ->
+                            RecipeCard(recipe = recipe, onClick = { /*TODO*/ })
+                        }
+                    })
+                }
             }
         }
     }
