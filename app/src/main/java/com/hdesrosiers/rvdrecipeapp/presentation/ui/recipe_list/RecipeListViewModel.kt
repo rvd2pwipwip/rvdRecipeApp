@@ -24,7 +24,7 @@ constructor(
     // observe data from repository
     val recipes: MutableState<List<Recipe>> = mutableStateOf(listOf())
 
-    val query = mutableStateOf("Chicken")
+    val query = mutableStateOf("")
 
     //get data from repository
     init {
