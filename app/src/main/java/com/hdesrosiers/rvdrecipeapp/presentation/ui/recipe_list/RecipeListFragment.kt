@@ -6,10 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 // import androidx.fragment.app.activityViewModels //if we want to share the ViewModel between activities
 import androidx.fragment.app.viewModels
+import com.hdesrosiers.rvdrecipeapp.presentation.components.CircularIndeterminateProgressBar
 import com.hdesrosiers.rvdrecipeapp.presentation.components.RecipeCard
 import com.hdesrosiers.rvdrecipeapp.presentation.components.SearchAppBar
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +39,8 @@ class RecipeListFragment : Fragment() {
 
                 val selectedCategory = viewModel.selectedCategory.value
 
+                val loading = viewModel.loading.value
+
                 Column {
 
                     SearchAppBar(
@@ -49,13 +53,20 @@ class RecipeListFragment : Fragment() {
                         onChangedCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition
                     )
 
-                    LazyColumn(content = {
-                        itemsIndexed(
-                            items = recipes
-                        ) { index, recipe ->
-                            RecipeCard(recipe = recipe, onClick = { /*TODO*/ })
-                        }
-                    })
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        LazyColumn(content = {
+                            itemsIndexed(
+                                items = recipes
+                            ) { index, recipe ->
+                                RecipeCard(recipe = recipe, onClick = { /*TODO*/ })
+                            }
+                        })
+
+                        CircularIndeterminateProgressBar(isDisplayed = loading)
+                    }
                 }
             }
         }

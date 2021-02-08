@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.hdesrosiers.rvdrecipeapp.domain.model.Recipe
 import com.hdesrosiers.rvdrecipeapp.repository.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
@@ -28,8 +29,10 @@ constructor(
 
     val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
 
-    // track position (not react so no need of mutable state)
+    // track position (no need to react = no need for mutable state)
     var categoryScrollPosition: Float = 0f
+
+    val loading = mutableStateOf(false)
 
     //get data from repository
     init {
@@ -38,13 +41,29 @@ constructor(
 
     fun onExecuteSearch() {
         viewModelScope.launch {
+            loading.value = true
+
+            resetSearchState()
+
+            delay(2000)
+
             val result = repository.search(
                 token = token,
                 page = 1,
                 query = query.value
             )
             recipes.value = result
+            loading.value = false
         }
+    }
+
+    private fun resetSearchState() {
+        recipes.value = emptyList()
+        if (selectedCategory.value?.value != query.value) clearSelectedCategory()
+    }
+
+    private fun clearSelectedCategory() {
+        selectedCategory.value = null
     }
 
     //change the value of query here to pass it to RecipeListFragment

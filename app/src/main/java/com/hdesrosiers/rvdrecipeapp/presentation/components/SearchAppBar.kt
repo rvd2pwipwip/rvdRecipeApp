@@ -91,7 +91,7 @@ fun SearchAppBar(
                             onSelectedCategoryChanged(it)
                             onChangedCategoryScrollPosition(scrollState.value)
                         },
-                        onExecuteSearch = { onExecuteSearch() },
+                        onExecuteSearch = onExecuteSearch,
                     )
                 }
             }
