@@ -33,10 +33,10 @@ constructor(
 
     //get data from repository
     init {
-        newSearch()
+        onExecuteSearch()
     }
 
-    fun newSearch() {
+    fun onExecuteSearch() {
         viewModelScope.launch {
             val result = repository.search(
                 token = token,
@@ -58,7 +58,7 @@ constructor(
         onQueryChanged(category)
     }
 
-    fun onChangedCategoryScrollPosition(position: Float) {
+    fun onChangeCategoryScrollPosition(position: Float) {
         categoryScrollPosition = position
     }
 }
