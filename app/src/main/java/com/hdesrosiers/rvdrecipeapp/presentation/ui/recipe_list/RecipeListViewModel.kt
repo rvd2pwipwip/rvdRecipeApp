@@ -28,6 +28,9 @@ constructor(
 
     val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
 
+    // track position (not react so no need of mutable state)
+    var categoryScrollPosition: Float = 0f
+
     //get data from repository
     init {
         newSearch()
@@ -53,5 +56,9 @@ constructor(
         val newCategory = getFoodCategory(category)
         selectedCategory.value = newCategory
         onQueryChanged(category)
+    }
+
+    fun onChangedCategoryScrollPosition(position: Float) {
+        categoryScrollPosition = position
     }
 }
