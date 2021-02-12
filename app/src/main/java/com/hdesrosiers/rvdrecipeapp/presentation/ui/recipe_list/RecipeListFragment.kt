@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 // import androidx.fragment.app.activityViewModels //if we want to share the ViewModel between activities
 import androidx.fragment.app.viewModels
 import com.hdesrosiers.rvdrecipeapp.presentation.components.CircularIndeterminateProgressBar
+import com.hdesrosiers.rvdrecipeapp.presentation.components.PulsingDemo
 import com.hdesrosiers.rvdrecipeapp.presentation.components.RecipeCard
 import com.hdesrosiers.rvdrecipeapp.presentation.components.SearchAppBar
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,20 +54,22 @@ class RecipeListFragment : Fragment() {
                         onChangedCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition
                     )
 
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        LazyColumn(content = {
-                            itemsIndexed(
-                                items = recipes
-                            ) { index, recipe ->
-                                RecipeCard(recipe = recipe, onClick = { /*TODO*/ })
-                            }
-                        })
+                    PulsingDemo()
 
-                        CircularIndeterminateProgressBar(isDisplayed = loading)
-                    }
+//                    Box(
+//                        modifier = Modifier
+//                            .fillMaxSize()
+//                    ) {
+//                        LazyColumn(content = {
+//                            itemsIndexed(
+//                                items = recipes
+//                            ) { index, recipe ->
+//                                RecipeCard(recipe = recipe, onClick = { /*TODO*/ })
+//                            }
+//                        })
+//
+//                        CircularIndeterminateProgressBar(isDisplayed = loading)
+//                    }
                 }
             }
         }
