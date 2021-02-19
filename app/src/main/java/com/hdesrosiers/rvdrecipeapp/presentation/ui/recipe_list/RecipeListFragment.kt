@@ -4,12 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Space
+import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush.Companion.linearGradient
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -56,41 +64,85 @@ class RecipeListFragment : Fragment() {
                         onChangedCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition
                     )
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(20.dp)
-                            .height(200.dp),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        val state = remember { mutableStateOf(IDLE) }
+//                    LoadingRecipeListShimmer(imageHeight = 250.dp)
 
-                        AnimatedHeartButton(
-                            modifier = Modifier,
-                            buttonState = state,
-                            onToggle = {
-                                state.value = if (state.value == IDLE) ACTIVE else IDLE
-                            })
-                    }
+//                    ShimmerRecipeCardItem(
+//                        colors = listOf(
+//                            Color.LightGray.copy(alpha = 0.9f),
+//                            Color.LightGray.copy(alpha = 0.5f),
+//                            Color.LightGray.copy(alpha = 0.9f),
+//                        ),
+//                        cardHeight = 250.dp
+//                    )
+
+//                    GradientDemo()
+
+//                    // favorite button state demo
+//
+//                    Row(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .padding(20.dp)
+//                            .height(200.dp),
+//                        horizontalArrangement = Arrangement.Center
+//                    ) {
+//                        val state = remember { mutableStateOf(IDLE) }
+//
+//                        AnimatedHeartButton(
+//                            modifier = Modifier,
+//                            buttonState = state,
+//                            onToggle = {
+//                                state.value = if (state.value == IDLE) ACTIVE else IDLE
+//                            })
+//                    }
 
 //                    PulsingDemo()
 
-//                    Box(
-//                        modifier = Modifier
-//                            .fillMaxSize()
-//                    ) {
-//                        LazyColumn(content = {
-//                            itemsIndexed(
-//                                items = recipes
-//                            ) { index, recipe ->
-//                                RecipeCard(recipe = recipe, onClick = { /*TODO*/ })
-//                            }
-//                        })
-//
-//                        CircularIndeterminateProgressBar(isDisplayed = loading)
-//                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        if (loading) {
+                            LoadingRecipeListShimmer(imageHeight = 250.dp)
+                        } else {
+                            LazyColumn(content = {
+                                itemsIndexed(
+                                    items = recipes
+                                ) { index, recipe ->
+                                    RecipeCard(recipe = recipe, onClick = { /*TODO*/ })
+                                }
+                            })
+                        }
+                        CircularIndeterminateProgressBar(isDisplayed = loading)
+                    }
                 }
             }
         }
+    }
+}
+
+
+@Composable
+fun GradientDemo() {
+    val colors = listOf(
+        Color.Blue,
+        Color.Green,
+        Color.Blue
+    )
+    val brush = linearGradient(
+        colors = colors,
+        start = Offset(200f,100f),
+        end = Offset(400f, 300f)
+    )
+    Surface(
+        shape = MaterialTheme.shapes.small
+    ) {
+        Spacer(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    brush = brush
+                )
+        )
     }
 }
