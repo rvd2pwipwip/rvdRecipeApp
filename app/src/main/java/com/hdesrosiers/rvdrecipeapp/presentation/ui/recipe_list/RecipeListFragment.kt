@@ -23,12 +23,19 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 // import androidx.fragment.app.activityViewModels //if we want to share the ViewModel between activities
 import androidx.fragment.app.viewModels
+import com.hdesrosiers.rvdrecipeapp.presentation.BaseApplication
 import com.hdesrosiers.rvdrecipeapp.presentation.components.*
 import com.hdesrosiers.rvdrecipeapp.presentation.components.HeartAnimationDefinition.HeartButtonState.*
+import com.hdesrosiers.rvdrecipeapp.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RecipeListFragment : Fragment() {
+
+    @Inject
+    lateinit var application: BaseApplication
+
 
     // instantiate ViewModel inside fragment
     val viewModel: RecipeListViewModel by viewModels()
@@ -40,29 +47,36 @@ class RecipeListFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                // mutable state values
-                val recipes = viewModel.recipes.value // observable data
+                // Wrap content to apply selected theme
+                AppTheme(
+                    darkTheme = application.isDark.value
+                ) {
+                    // mutable state values
+                    val recipes = viewModel.recipes.value // observable data
 
-                // Mutable data structure that will be passed to the TextField
-                val query = viewModel.query.value // from viewModel to persist configuration change
-                // another way of persisting data with savedInstanceState
+                    // Mutable data structure that will be passed to the TextField
+                    val query = viewModel.query.value // from viewModel to persist configuration change
+                    // another way of persisting data with savedInstanceState
 //                val _query = savedInstanceState{ "Beef" }
 
-                val selectedCategory = viewModel.selectedCategory.value
+                    val selectedCategory = viewModel.selectedCategory.value
 
-                val loading = viewModel.loading.value
+                    val loading = viewModel.loading.value
 
-                Column {
+                    Column {
 
-                    SearchAppBar(
-                        query = query,
-                        onQueryChanged = viewModel::onQueryChanged, // method references to delegate
-                        onExecuteSearch = viewModel::onExecuteSearch,
-                        scrollPosition = viewModel.categoryScrollPosition,
-                        selectedCategory = selectedCategory,
-                        onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
-                        onChangedCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition
-                    )
+                        SearchAppBar(
+                            query = query,
+                            onQueryChanged = viewModel::onQueryChanged, // method references to delegate
+                            onExecuteSearch = viewModel::onExecuteSearch,
+                            scrollPosition = viewModel.categoryScrollPosition,
+                            selectedCategory = selectedCategory,
+                            onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
+                            onChangedCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition,
+                            onToggleTheme = {
+                                application.toggleTheme()
+                            }
+                        )
 
 //                    LoadingRecipeListShimmer(imageHeight = 250.dp)
 
@@ -98,22 +112,26 @@ class RecipeListFragment : Fragment() {
 
 //                    PulsingDemo()
 
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        if (loading) {
-                            LoadingRecipeListShimmer(imageHeight = 250.dp)
-                        } else {
-                            LazyColumn(content = {
-                                itemsIndexed(
-                                    items = recipes
-                                ) { index, recipe ->
-                                    RecipeCard(recipe = recipe, onClick = { /*TODO*/ })
-                                }
-                            })
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    color = MaterialTheme.colors.background
+                                )
+                        ) {
+                            if (loading) {
+                                LoadingRecipeListShimmer(imageHeight = 250.dp)
+                            } else {
+                                LazyColumn(content = {
+                                    itemsIndexed(
+                                        items = recipes
+                                    ) { index, recipe ->
+                                        RecipeCard(recipe = recipe, onClick = { /*TODO*/ })
+                                    }
+                                })
+                            }
+                            CircularIndeterminateProgressBar(isDisplayed = loading)
                         }
-                        CircularIndeterminateProgressBar(isDisplayed = loading)
                     }
                 }
             }
