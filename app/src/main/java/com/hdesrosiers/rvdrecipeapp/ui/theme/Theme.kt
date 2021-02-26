@@ -50,17 +50,20 @@ private val LightColorPalette = lightColors(
 //
 //)
 
-@Composable
+@Composable //Mitch's theme example
 fun AppTheme(
     darkTheme: Boolean,
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
-        colors = if (darkTheme) DarkColorPalette else LightColorPalette
+        colors = if (darkTheme) DarkColorPalette else LightColorPalette,
+        typography = QuicksandTypography
     ) {
         content()
     }
 }
+
+//Android default theme
 
 //@Composable
 //fun RvdRecipeAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable() () -> Unit) {
