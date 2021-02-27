@@ -9,8 +9,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,61 +65,34 @@ class RecipeListFragment : Fragment() {
                     val selectedCategory = viewModel.selectedCategory.value
 
                     val loading = viewModel.loading.value
-
-                    Column {
-
-                        SearchAppBar(
-                            query = query,
-                            onQueryChanged = viewModel::onQueryChanged, // method references to delegate
-                            onExecuteSearch = viewModel::onExecuteSearch,
-                            scrollPosition = viewModel.categoryScrollPosition,
-                            selectedCategory = selectedCategory,
-                            onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
-                            onChangedCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition,
-                            onToggleTheme = {
-                                application.toggleTheme()
-                            }
-                        )
-
-//                    LoadingRecipeListShimmer(imageHeight = 250.dp)
-
-//                    ShimmerRecipeCardItem(
-//                        colors = listOf(
-//                            Color.LightGray.copy(alpha = 0.9f),
-//                            Color.LightGray.copy(alpha = 0.5f),
-//                            Color.LightGray.copy(alpha = 0.9f),
-//                        ),
-//                        cardHeight = 250.dp
-//                    )
-
-//                    GradientDemo()
-
-//                    // favorite button state demo
-//
-//                    Row(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(20.dp)
-//                            .height(200.dp),
-//                        horizontalArrangement = Arrangement.Center
-//                    ) {
-//                        val state = remember { mutableStateOf(IDLE) }
-//
-//                        AnimatedHeartButton(
-//                            modifier = Modifier,
-//                            buttonState = state,
-//                            onToggle = {
-//                                state.value = if (state.value == IDLE) ACTIVE else IDLE
-//                            })
-//                    }
-
-//                    PulsingDemo()
-
+                    
+                    Scaffold(
+                        topBar = {
+                            SearchAppBar(
+                                query = query,
+                                onQueryChanged = viewModel::onQueryChanged, // method references to delegate
+                                onExecuteSearch = viewModel::onExecuteSearch,
+                                scrollPosition = viewModel.categoryScrollPosition,
+                                selectedCategory = selectedCategory,
+                                onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
+                                onChangedCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition,
+                                onToggleTheme = {
+                                    application.toggleTheme()
+                                }
+                            )
+                        },
+                        bottomBar = {
+                            MyBottomBar()
+                        },
+                        drawerContent = {
+                            MyDrawer()
+                        }
+                    ) {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(
-                                    color = MaterialTheme.colors.background
+                                    color = MaterialTheme.colors.surface
                                 )
                         ) {
                             if (loading) {
@@ -136,6 +112,40 @@ class RecipeListFragment : Fragment() {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun MyBottomBar() {
+    BottomNavigation(
+        elevation = 12.dp
+    ) {
+        BottomNavigationItem(
+            icon = { Icon(imageVector = Icons.Default.Home) },
+            selected = true,
+            onClick = { /*TODO*/ }
+        )
+        BottomNavigationItem(
+            icon = { Icon(imageVector = Icons.Default.Search) },
+            selected = false,
+            onClick = { /*TODO*/ }
+        )
+        BottomNavigationItem(
+            icon = { Icon(imageVector = Icons.Default.Person) },
+            selected = false,
+            onClick = { /*TODO*/ }
+        )
+    }
+}
+
+@Composable
+fun MyDrawer() {
+    Column() {
+        Text(text = "Item 1")
+        Text(text = "Item 2")
+        Text(text = "Item 3")
+        Text(text = "Item 4")
+        Text(text = "Item 5")
     }
 }
 
