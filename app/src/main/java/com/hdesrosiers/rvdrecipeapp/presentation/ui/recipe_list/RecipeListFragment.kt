@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush.Companion.linearGradient
@@ -32,6 +33,7 @@ import androidx.lifecycle.lifecycleScope
 import com.hdesrosiers.rvdrecipeapp.presentation.BaseApplication
 import com.hdesrosiers.rvdrecipeapp.presentation.components.*
 import com.hdesrosiers.rvdrecipeapp.presentation.components.HeartAnimationDefinition.HeartButtonState.*
+import com.hdesrosiers.rvdrecipeapp.presentation.components.util.SnackbarController
 import com.hdesrosiers.rvdrecipeapp.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -43,6 +45,7 @@ class RecipeListFragment : Fragment() {
     @Inject
     lateinit var application: BaseApplication
 
+    private val snackbarController = SnackbarController(lifecycleScope)
 
     // instantiate ViewModel inside fragment
     val viewModel: RecipeListViewModel by viewModels()
@@ -56,98 +59,92 @@ class RecipeListFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
 
-                // SnackBar demo
-//                val isShowing = remember { mutableStateOf(false) }
+                // Wrap content to apply selected theme
+                AppTheme(
+                    darkTheme = application.isDark.value
+                ) {
+                    // mutable state values
+                    val recipes = viewModel.recipes.value // observable data
 
-                val snackbarHostState = remember { SnackbarHostState() }
-                Column {
-                    Button(onClick = {
-//                        isShowing.value = true
-                        lifecycleScope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = "Het look a hosted snackbar",
-                                actionLabel = "Hide",
-                                duration = SnackbarDuration.Short
+                    // Mutable data structure that will be passed to the TextField
+                    val query = viewModel.query.value // from viewModel to persist configuration change
+                    // another way of persisting data with savedInstanceState
+//                val _query = savedInstanceState{ "Beef" }
+
+                    val selectedCategory = viewModel.selectedCategory.value
+
+                    val loading = viewModel.loading.value
+
+                    val scaffoldState = rememberScaffoldState()
+
+                    Scaffold(
+                        topBar = {
+                            SearchAppBar(
+                                query = query,
+                                onQueryChanged = viewModel::onQueryChanged, // method reference to delegate
+                                onExecuteSearch = {
+                                    if (viewModel.selectedCategory.value?.value == "Milk") {
+                                        snackbarController.getScope().launch {
+                                            snackbarController.showSnackbar(
+                                                scaffoldState = scaffoldState,
+                                                message = "Invalid category: MILK!",
+                                                actionLabel = "Hide",
+                                            )
+                                        }
+                                    } else run {
+                                        viewModel.onExecuteSearch()
+                                    }
+                                },
+                                scrollPosition = viewModel.categoryScrollPosition,
+                                selectedCategory = selectedCategory,
+                                onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
+                                onChangedCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition,
+                                onToggleTheme = {
+                                    application.toggleTheme()
+                                }
+                            )
+                        },
+                        bottomBar = {
+                            MyBottomBar()
+                        },
+                        drawerContent = {
+                            MyDrawer()
+                        },
+                        scaffoldState = scaffoldState,
+                        snackbarHost = {
+                            scaffoldState.snackbarHostState
+                        },
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    color = MaterialTheme.colors.surface
+                                )
+                                .padding(bottom = 50.dp)
+                        ) {
+                            if (loading) {
+                                LoadingRecipeListShimmer(imageHeight = 250.dp)
+                            } else {
+                                LazyColumn(content = {
+                                    itemsIndexed(
+                                        items = recipes
+                                    ) { index, recipe ->
+                                        RecipeCard(recipe = recipe, onClick = { /*TODO*/ })
+                                    }
+                                })
+                            }
+                            CircularIndeterminateProgressBar(isDisplayed = loading)
+                            DefaultSnackbar(
+                                snackbarHostState = scaffoldState.snackbarHostState,
+                                onDismiss = {
+                                    scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
+                                },
+                                modifier = Modifier.align(Alignment.BottomCenter)
                             )
                         }
                     }
-                    ) {
-                        Text(
-                            text = "Show Snackbar"
-                        )
-                    }
-
-                    DecoupledSnackbarDemo(snackbarHostState = snackbarHostState)
-
-//                    SnackbarDemo(
-//                        isShowing = isShowing.value,
-//                        onHideSnackbar = {
-//                            isShowing.value = false
-//                        },
-//                    )
                 }
-
-                // Wrap content to apply selected theme
-//                AppTheme(
-//                    darkTheme = application.isDark.value
-//                ) {
-//                    // mutable state values
-//                    val recipes = viewModel.recipes.value // observable data
-//
-//                    // Mutable data structure that will be passed to the TextField
-//                    val query = viewModel.query.value // from viewModel to persist configuration change
-//                    // another way of persisting data with savedInstanceState
-////                val _query = savedInstanceState{ "Beef" }
-//
-//                    val selectedCategory = viewModel.selectedCategory.value
-//
-//                    val loading = viewModel.loading.value
-//
-//                    Scaffold(
-//                        topBar = {
-//                            SearchAppBar(
-//                                query = query,
-//                                onQueryChanged = viewModel::onQueryChanged, // method references to delegate
-//                                onExecuteSearch = viewModel::onExecuteSearch,
-//                                scrollPosition = viewModel.categoryScrollPosition,
-//                                selectedCategory = selectedCategory,
-//                                onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
-//                                onChangedCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition,
-//                                onToggleTheme = {
-//                                    application.toggleTheme()
-//                                }
-//                            )
-//                        },
-//                        bottomBar = {
-//                            MyBottomBar()
-//                        },
-//                        drawerContent = {
-//                            MyDrawer()
-//                        }
-//                    ) {
-//                        Box(
-//                            modifier = Modifier
-//                                .fillMaxSize()
-//                                .background(
-//                                    color = MaterialTheme.colors.surface
-//                                )
-//                                .padding(bottom = 50.dp)
-//                        ) {
-//                            if (loading) {
-//                                LoadingRecipeListShimmer(imageHeight = 250.dp)
-//                            } else {
-//                                LazyColumn(content = {
-//                                    itemsIndexed(
-//                                        items = recipes
-//                                    ) { index, recipe ->
-//                                        RecipeCard(recipe = recipe, onClick = { /*TODO*/ })
-//                                    }
-//                                })
-//                            }
-//                            CircularIndeterminateProgressBar(isDisplayed = loading)
-//                        }
-//                    }
-//                }
             }
         }
     }
