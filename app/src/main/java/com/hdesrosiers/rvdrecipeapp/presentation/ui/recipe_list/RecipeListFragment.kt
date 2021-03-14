@@ -4,10 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Space
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -16,8 +14,6 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -32,7 +28,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.hdesrosiers.rvdrecipeapp.presentation.BaseApplication
 import com.hdesrosiers.rvdrecipeapp.presentation.components.*
-import com.hdesrosiers.rvdrecipeapp.presentation.components.HeartAnimationDefinition.HeartButtonState.*
 import com.hdesrosiers.rvdrecipeapp.presentation.components.util.SnackbarController
 import com.hdesrosiers.rvdrecipeapp.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -75,6 +70,8 @@ class RecipeListFragment : Fragment() {
 
                     val loading = viewModel.loading.value
 
+                    val page = viewModel.page.value
+
                     val scaffoldState = rememberScaffoldState()
 
                     Scaffold(
@@ -92,7 +89,7 @@ class RecipeListFragment : Fragment() {
                                             )
                                         }
                                     } else run {
-                                        viewModel.onExecuteSearch()
+                                        viewModel.newSearch()
                                     }
                                 },
                                 scrollPosition = viewModel.categoryScrollPosition,
@@ -123,13 +120,17 @@ class RecipeListFragment : Fragment() {
                                 )
                                 .padding(bottom = 50.dp)
                         ) {
-                            if (loading) {
+                            if (loading && recipes.isEmpty()) {
                                 LoadingRecipeListShimmer(imageHeight = 250.dp)
                             } else {
                                 LazyColumn(content = {
                                     itemsIndexed(
                                         items = recipes
                                     ) { index, recipe ->
+                                        viewModel.onChangeRecipeScrollPosition(index)
+                                        if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
+                                            viewModel.nextPage()
+                                        }
                                         RecipeCard(recipe = recipe, onClick = { /*TODO*/ })
                                     }
                                 })
