@@ -29,6 +29,7 @@ import androidx.lifecycle.lifecycleScope
 import com.hdesrosiers.rvdrecipeapp.presentation.BaseApplication
 import com.hdesrosiers.rvdrecipeapp.presentation.components.*
 import com.hdesrosiers.rvdrecipeapp.presentation.components.util.SnackbarController
+import com.hdesrosiers.rvdrecipeapp.presentation.ui.recipe_list.RecipeListEvent.*
 import com.hdesrosiers.rvdrecipeapp.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -89,7 +90,7 @@ class RecipeListFragment : Fragment() {
                                             )
                                         }
                                     } else run {
-                                        viewModel.newSearch()
+                                        viewModel.onTriggerEvent(NewSearchEvent)
                                     }
                                 },
                                 scrollPosition = viewModel.categoryScrollPosition,
@@ -129,7 +130,7 @@ class RecipeListFragment : Fragment() {
                                     ) { index, recipe ->
                                         viewModel.onChangeRecipeScrollPosition(index)
                                         if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
-                                            viewModel.nextPage()
+                                            viewModel.onTriggerEvent(NextPageEvent)
                                         }
                                         RecipeCard(recipe = recipe, onClick = { /*TODO*/ })
                                     }
